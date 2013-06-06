@@ -13,11 +13,11 @@
 	<!-- begin post -->
 	<div class="post">
 	<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-	<p class="details1">Posted by <?php the_author_posts_link(); ?> on <a href="<?php echo get_day_link("$arc_year", "$arc_month", "$arc_day"); ?>"><?php the_time('F j, Y') ?></a> at <?php the_time('H:i a') ?></p>
+	<!-- <p class="details1">Posted by <?php the_author_posts_link(); ?> on <a href="<?php echo get_day_link("$arc_year", "$arc_month", "$arc_day"); ?>"><?php the_time('F j, Y') ?></a> at <?php the_time('H:i a') ?></p> -->
 	<?php the_content('Read More'); ?> 
 	<div class="details2">
 	<?php the_tags('<p class="l">Tags:', ', ', '</p>'); ?>
-	<p class="r">Filed Under: <?php the_category(', '); ?></p>
+	<!-- <p class="r">Filed Under: <?php the_category(', '); ?></p> -->
 	</div>
 	</div>
 	<!-- end post -->

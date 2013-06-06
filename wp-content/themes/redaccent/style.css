@@ -7,11 +7,16 @@ Author URI: http://www.wpthemedesigner.com/
 * {
 	margin: 0; padding: 0;
 }
+
+/* This is for the Ataturk logo on the right side */
+#ataturk { background:url('images/ataturk.jpg') left top no-repeat; width:280px; height:210px; 
+}
+
 body {
 	text-align: center;
 	font: 12px Verdana;
 	color: #565656;
-	background: #FFFFFF url(images/background-final.png) repeat-x 0 0;
+	background: #FFFFFF url(images/background-final.png) repeat-x 0 -28px;
 }
 a {
 	color: #98320c;
@@ -44,6 +49,7 @@ img {
 #wrapper {
 	width: 980px;
 	margin: auto auto;
+        margin-top: -28px;
 	text-align: left;
 }
 /** END wrapper **/
@@ -58,7 +64,7 @@ img {
 		float: right;
 		padding: 2px 20px 2px 0;
 		background: url(images/rss.gif) no-repeat right 0;
-		margin-top: 6px;
+		margin-top: -19px;
 	}
 		#header .subscribe a {
 			color: #ffffff;
@@ -81,10 +87,10 @@ img {
 				background: none;
 			}
 		#header ul li a {
-			color: #ffffff;
+			color: #FFFFFF;
 			text-decoration: none;
 			display: block;
-			padding: 6px 18px;
+			padding: 4px 18px;
 			text-transform: uppercase;
 			font-weight: bold;
 		}
@@ -94,6 +100,7 @@ img {
 		#header ul li a:hover {
 			text-decoration: underline;
 		}
+
 	#header h1 {
 		float: left;
 		font-size: 0;
@@ -102,14 +109,14 @@ img {
 	}
 		#header h1 a {
 			display: block;
-			width: 980px; height: 138px;
-			background: url(images/banner-f.jpg) no-repeat 0px 4px;
+			width: 980px; height: 144px;
+			background: url(images/banner-bitdefe.jpg) no-repeat 0 8px;
 		}
 	#header form {
 		float: right;
 		width: 275px; height: 26px;
 		background: url(images/search.gif) no-repeat 0 0;
-		margin: 0px 0px 0 0;
+		margin: -95px 0px 0 0;
 	}
 		#header form input {
 			float: left;
@@ -138,13 +145,13 @@ img {
 	width: 160px;
 	float: left;
 	font-size: 0.9em;
-	padding: 20px 0 15px;
+	padding: 5px 0 15px;
 }
 	#lsidebar h2 {
 		text-transform: uppercase;
 		color: #31322D;
 		font-size: 1em;
-		padding-bottom: 10px;
+		padding-bottom: 0;
 	}
 	#lsidebar ul {
 		list-style-type: none;
@@ -265,7 +272,7 @@ img {
 #rsidebar {
 	width: 280px;
 	float: right;
-	padding: 15px 0;
+	padding: 0 0;
 }
 	#rsidebar h2 {
 		font-size: 0.9em;
@@ -287,6 +294,9 @@ img {
 		padding: 0 10px 20px;
 		list-style-type: none;
 	}
+        	#rsidebar .ataturklist{
+			list-style-type: square;
+        	}
 		#rsidebar ul li {
 			line-height: 1.4em;
 			padding: 4px 0;

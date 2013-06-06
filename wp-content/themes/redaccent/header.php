@@ -22,21 +22,17 @@
 
 	<!-- BEGIN header -->
 	<div id="header">
+        	<?php // SETUP
+		$args =array(
+    			'exclude' => '58,60,64,65,66,67,68,69,76,77,78,79,80,81,82,87,88,92,93,101,102,103,104,105,106,107,108,109,118,134,136,137,138',
+    			'menu' => 'pages',           // Menu type pages | categories | menuID | menu name
+    			'vertical' => false,     // Display vertical?
+		);
+		// CREATE
+		shailan_dropdown_menu( $args ); ?>
                 <!-- [BKa] Commented out the next line because we did not want the comments, etc links that appeared on the top right corner -->
 		<!-- <p class="subscribe"><strong>Subscribe</strong>: <a href="<?php bloginfo('rss2_url'); ?>">Posts</a> | <a href="<?php bloginfo('comments_rss2_url'); ?>">Comments</a> | <a href="#">Email</a></p> -->
-		<ul>
-                <!-- [BKa] Commented out the next line because we need to change the homepage text dynamically depending on the language -->
-		<!-- <li class="f"><a href="<?php echo get_option('home'); ?>">Ana Sayfa</a></li> -->
-                <li class="f"><a href="<?php echo get_option('home'); ?>"> 
-                 <?php
-                  if( qtrans_getLanguage() == 'fr' ){ ?>
-                   Acceuil
-                  <?php }else { ?>
-                   Ana Sayfa
-                  <?php } ?> 
-                </a></li>
-		<?php wp_list_pages('title_li='); ?>
-		</ul>
+
 		<h1><a href="<?php echo get_option('home'); ?>"><?php bloginfo('name'); ?></a></h1>
 		<form action="<?php echo get_option('home'); ?>/">
 		<input type="text" name="s" id="s" value="<?php the_search_query(); ?>" />
