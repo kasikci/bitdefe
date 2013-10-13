@@ -5,7 +5,7 @@ function help_icon($hash){
 }
 
 // Define themes
-$available_themes = array(
+$default_themes = array(
 	'None' => '*none*',
 	'From URL' => '*url*',
 	'Custom CSS' => '*custom*',
@@ -27,6 +27,8 @@ $available_themes = array(
 	'Pills by Shailan' => plugins_url('/themes/pills.css', __FILE__)
 );
 
+$available_themes = array();
+
 // Check for theme style file
 if( file_exists( trailingslashit( get_stylesheet_directory() ) . 'dropdown.css') ){
 	$available_themes['Dropdown.css (theme)'] = get_stylesheet_directory_uri() . '/dropdown.css';
@@ -35,6 +37,8 @@ if( file_exists( trailingslashit( get_stylesheet_directory() ) . 'dropdown.css')
 if( file_exists( trailingslashit( get_template_directory() ) . 'dropdown.css') ){
 	$available_themes['Dropdown.css (template)'] = get_template_directory_uri() . '/dropdown.css';
 }
+
+$available_themes = array_merge( $available_themes, $default_themes );
 
 // Swap array for options page
 $themes = array();
@@ -72,6 +76,9 @@ if( function_exists('wp_nav_menu') ){
 
 $this->menu_types = $types; // Back it up
 
+// Registered menu locations
+global $_wp_registered_nav_menus;
+
 // Define plugin options	
 $options = array(
 	
@@ -80,6 +87,31 @@ array(
 	"label" => __("General"),
 	"type" => "section"
 ),
+
+	array(  "name" => "Dropdown Menu Theme",
+	"desc" => "Skin for the menu".help_icon("menu-theme"),
+	"id" => "shailan_dm_active_theme",
+	"std" => plugins_url("/dropdown-menu-widget/themes/web20.css"),
+	"options" => $themes,
+	"type" => "select"),
+	
+	array(  "name" => "Theme URL",
+	"desc" => "If <strong>From URL</strong> is selected you can specify theme URL here. ".help_icon("theme-url"),
+	"id" => "shailan_dm_theme_url",
+	"std" => "http://",
+	"type" => "text"),
+	
+	array(  "name" => "Use Theme Location",
+	"desc" => "This option enables use of theme location.". help_icon("theme-location"),
+	"id" => "shailan_dm_location_enabled",
+	"type" => "checkbox",
+	"std" => "off" ),
+	
+	array(  "name" => "Theme Location",
+	"desc" => "This option will place dropdown menu automatically to the theme location.". help_icon("theme-location"),
+	"id" => "shailan_dm_location",
+	"type" => "select",
+	"options" => $_wp_registered_nav_menus ),
 	
 	array(  "name" => "Rename Homepage",
 	"desc" => "You can change your homepage link text here " . help_icon("rename-homepage"),
@@ -99,22 +131,64 @@ array(
 	"std" => "rgba(0,0,0,0.5)",
 	"type" => "text"),
 	
-	array(  "name" => "Wrap long menu items",
-	"desc" => "If checked long menu items will wrap". help_icon("wrap-long-menu-items"),
-	"id" => "shailan_dm_allowmultiline",
-	"type" => "checkbox"),
-	
-	array(  "name" => "Remove title attributes",
-	"desc" => "This will remove 'View all posts under..' title attributes from menu links". help_icon("remove-title-attributes"),
-	"id" => "shailan_dm_remove_title_attributes",
-	"type" => "checkbox"),
-	
-	array(  "name" => "Remove links from top levels",
-	"desc" => "This will remove links from top level pages/categories. So user can only click to sub-level menu.". help_icon("remove-links-from-top-levels"),
-	"id" => "shailan_dm_remove_top_level_links",
-	"type" => "checkbox"),
-	
 array( "type" => "close" ),
+
+array(
+		"name" => "Template Tag",
+		"label" => __("Template Tag"),
+		"type" => "section"
+	),
+	
+	array(
+		"desc" => "Settings here only effect menus inserted with <strong>template tag</strong> : <code>&lt;?php shailan_dropdown_menu(); ?&gt;</code>. Widget settings are NOT affected by these settings. ".help_icon("template-tag"),
+		"type" => "paragraph"
+	),
+	
+	array(  "name" => "Menu Type",
+	"desc" => "Dropdown Menu Type".help_icon("menu-type"),
+	"id" => "shailan_dm_type",
+	"std" => "pages",
+	"options" => $types,
+	"type" => "select"),
+	
+	array(  "name" => "Home link",
+	"desc" => "If checked dropdown menu displays home link".help_icon("home-link"),
+	"id" => "shailan_dm_home",
+	"std" => 'on',
+	"type" => "checkbox"),
+	
+	array(  "name" => "Login",
+	"desc" => "If checked dropdown menu displays login link".help_icon("login"),
+	"id" => "shailan_dm_login",
+	"std" => 'on',
+	"type" => "checkbox"),
+	
+	array(  "name" => "Register / Site Admin",
+	"desc" => "If checked dropdown menu displays register/site admin link.".help_icon("register-site-admin"),
+	"id" => "shailan_dm_login",
+	"std" => 'on',
+	"type" => "checkbox"),
+	
+	array(  "name" => "Vertical menu",
+	"desc" => "If checked dropdown menu is displayed vertical.".help_icon("vertical-menu"),
+	"id" => "shailan_dm_vertical",
+	"std" => 'off',
+	"type" => "checkbox"),
+	
+	array(  "name" => "Exclude Pages",
+	"desc" => "Excluded page IDs.".help_icon("exclude-pages"),
+	"id" => "shailan_dm_exclude",
+	"std" => "",
+	"type" => "text"),
+	
+	array(  "name" => "Alignment",
+	"desc" => "Menu alignment.".help_icon("alignment"),
+	"id" => "shailan_dm_align",
+	"std" => "left",
+	"options" => $alignment,
+	"type" => "select"),
+	
+	array( "type" => "close" ),
 	
 array(
 	"name" => "Effects",
@@ -124,6 +198,7 @@ array(
 	
 	array(  "name" => "Enable dropdown effects",
 	"desc" => "If checked sub menus will use effects below". help_icon("enable-dropdown-effects"),
+	"std" => "on",
 	"id" => "shailan_dm_effects",
 	"type" => "checkbox"),
 	
@@ -137,6 +212,7 @@ array(
 	"desc" => "Select effect speed".help_icon("effect-speed"),
 	"id" => "shailan_dm_effect_speed",
 	"type" => "select",
+	"std" => "fast",
 	"options" => $speed ),
 	
 	array(  "name" => "Effect delay",
@@ -148,33 +224,20 @@ array(
 array( "type" => "close" ),
 
 array(
-	"name" => "Theme",
-	"label" => __("Theme"),
+	"name" => "custom-colors",
+	"label" => __("Custom colors"),
 	"type" => "section"
 ),
 
-	array(  "name" => "Dropdown Menu Theme",
-	"desc" => "Skin for the menu".help_icon("menu-theme"),
-	"id" => "shailan_dm_active_theme",
-	"std" => "None",
-	"options" => $themes,
-	"type" => "select"),
-	
-	array(  "name" => "Theme URL",
-	"desc" => "If <strong>From URL</strong> is selected you can specify theme URL here. ".help_icon("theme-url"),
-	"id" => "shailan_dm_theme_url",
-	"std" => "http://",
-	"type" => "text"),
-	
 	array(
-		"desc" => "Using options below you can customize certain elements of current theme. If you choose <strong>Color Scheme</strong> as theme, you will have full control over colors.",
+		"desc" => "Using options below you can customize certain elements of current theme. If you select <strong>Color Scheme</strong> as your theme, you will have full control over colors.",
 		"type" => "paragraph"
 	),
 	
 	array(  "name" => "Use custom colors",
 	"desc" => "If not checked custom colors won't work.".help_icon("use-custom-colors"),
 	"id" => "shailan_dm_custom_colors",
-	"std" => true,
+	"std" => 'off',
 	"type" => "checkbox"),
 	
 	array("type"=>"picker"),
@@ -241,66 +304,33 @@ array(
 	array(  "name" => "Show Empty Categories",
 	"desc" => "If checked categories with no posts will be shown.".help_icon("show-empty-categories"),
 	"id" => "shailan_dm_show_empty",
-	"std" => false,
+	"std" => 'on',
 	"type" => "checkbox"),
 	
-	array( "type" => "close" ),
-	
-	array(
-		"name" => "Template Tag",
-		"label" => __("Template Tag"),
-		"type" => "section"
+		array(  
+		"name" => "Wrap long menu items",
+		"desc" => "If checked long menu items will wrap". help_icon("wrap-long-menu-items"),
+		"id" => "shailan_dm_allowmultiline",
+		"type" => "checkbox",
+		"std" => "off"
 	),
 	
-	array(
-		"desc" => "Settings here only effect menus inserted with template tag : <code>&lt;?php shailan_dropdown_menu(); ?&gt;</code>. Widget settings are NOT affected by these settings. ".help_icon("template-tag"),
-		"type" => "paragraph"
+	array(  
+		"name" => "Remove title attributes",
+		"desc" => "This will remove 'View all posts under..' title attributes from menu links". help_icon("remove-title-attributes"),
+		"id" => "shailan_dm_remove_title_attributes",
+		"type" => "checkbox",
+		"std" => "off"
 	),
 	
-	array(  "name" => "Menu Type",
-	"desc" => "Dropdown Menu Type".help_icon("menu-type"),
-	"id" => "shailan_dm_type",
-	"std" => "pages",
-	"options" => $types,
-	"type" => "select"),
-	
-	array(  "name" => "Home link",
-	"desc" => "If checked dropdown menu displays home link".help_icon("home-link"),
-	"id" => "shailan_dm_home",
-	"std" => true,
-	"type" => "checkbox"),
-	
-	array(  "name" => "Login",
-	"desc" => "If checked dropdown menu displays login link".help_icon("login"),
-	"id" => "shailan_dm_login",
-	"std" => true,
-	"type" => "checkbox"),
-	
-	array(  "name" => "Register / Site Admin",
-	"desc" => "If checked dropdown menu displays register/site admin link.".help_icon("register-site-admin"),
-	"id" => "shailan_dm_login",
-	"std" => true,
-	"type" => "checkbox"),
-	
-	array(  "name" => "Vertical menu",
-	"desc" => "If checked dropdown menu is displayed vertical.".help_icon("vertical-menu"),
-	"id" => "shailan_dm_vertical",
-	"std" => true,
-	"type" => "checkbox"),
-	
-	array(  "name" => "Exclude Pages",
-	"desc" => "Excluded page IDs.".help_icon("exclude-pages"),
-	"id" => "shailan_dm_exclude",
-	"std" => "",
-	"type" => "text"),
-	
-	array(  "name" => "Alignment",
-	"desc" => "Menu alignment.".help_icon("alignment"),
-	"id" => "shailan_dm_align",
-	"std" => "left",
-	"options" => $alignment,
-	"type" => "select"),
+	array(  
+		"name" => "Remove links from top levels",
+		"desc" => "This will remove links from top level pages/categories. So user can only click to sub-level menu.". help_icon("remove-links-from-top-levels"),
+		"id" => "shailan_dm_remove_top_level_links",
+		"type" => "checkbox",
+		"std" => "off"
+	),
 	
 	array( "type" => "close" )
 	
-);
+); 

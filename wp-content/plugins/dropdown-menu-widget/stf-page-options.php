@@ -26,18 +26,12 @@
 		</div>
 	</div>
 
-	<div id="stf_tweet_wrap">
-	<div id="stf_tweet"></div><script type="text/javascript"> 
-	jQuery(document).ready(function($) {
-		$('#stf_tweet').tweetable({username: 'shailancom', time: false, limit: 1, replies: false});
-	});
-	</script>
-	
+	<div id="stf_tweet_wrap">	
 	<a href="http://twitter.com/shailancom" class="follow-link">Follow Shailan.com on twitter!</a>
 	</div>
 
 	<div id="headlines">
-	<h3>Latest headlines from Shailan.com</h3>
+	<h3>Shailan Design Blog</h3>
 		<?php
 				//echo get_latest_tweet('mattsay');			
 				
@@ -58,8 +52,16 @@
 
 <div id="nav"><?php if(!empty($navigation)){echo $navigation;} ?></div>
 
+
+
 <div class="stf_opts_wrap">
 <div class="stf_options">
+
+
+<div id="demo"><h3>Menu Demo:</h3><?php shailan_dropdown_menu(); ?><br />
+<em>Please note, demo uses <a href="http://shailan.com/2773/dropdown-menu-widget-template-tag-usage-explained/" target="_blank">php template tag</a>.</em></div>
+
+
 <form method="post">
 <div id="options-tabs">
 
@@ -194,16 +196,15 @@ case 'picker':
 
 <div id="tabs-footer" class="clearfix">
 	<p class="submit">
-		<input name="save" type="submit" class="button-primary" value="Save changes" />
+		<?php submit_button( 'Save Changes', 'primary', 'save', false ); ?>
 		<input type="hidden" name="action" value="save" />
 	</p>
 	</form>
 	
 	<form method="post">
-		<input name="reset" type="submit" class="button-secondary" value="Reset Options" />
+		<?php submit_button( 'Reset Options', 'secondary', 'reset', false ); ?>
 		<input type="hidden" name="action" value="reset" />
 	</form>
-
 
 	<div class="copyright"><?php if(!empty($footer_text)){echo $footer_text;} ?></div>
 </div>

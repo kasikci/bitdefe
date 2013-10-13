@@ -4,23 +4,45 @@ Author: ChiQ Montes
 Author URI: http://www.wpthemedesigner.com/
 */
 
-* {
-	margin: 0; padding: 0;
+#wp-calendar td:hover, #wp-calendar #today {
+background: #eee;
+color: #bbb;
 }
+
+html {min-height: 100%; margin-bottom: 1px;}
+
+/** BEGIN wrapper dynamic menu **/
+#wrappermenu {
+	width: 100px;
+	text-align:left;
+}
+
+	#wrappermenu ul {
+		list-style-type: none;
+		padding-bottom: 25px;
+	}
+/** END wrapper dynamic menu **/
 
 /* This is for the Ataturk logo on the right side */
 #ataturk { background:url('images/ataturk.jpg') left top no-repeat; width:280px; height:210px; 
+}
+#bitdefelogo { background:url('images/banner-bitdefe.jpg') left top no-repeat; width:280px; height:210px; 
+}
+
+* {
+	margin: 0; padding: 0;
 }
 
 body {
 	text-align: center;
 	font: 12px Verdana;
 	color: #565656;
-	background: #FFFFFF url(images/background-final.png) repeat-x 0 -28px;
+	background: #FFFFFF url(images/background-final.png) repeat-x 0 0px;
 }
 a {
 	color: #98320c;
 }
+
 img {
 	border: 0;
 }
@@ -49,7 +71,7 @@ img {
 #wrapper {
 	width: 980px;
 	margin: auto auto;
-        margin-top: -28px;
+        margin-top: 0x;
 	text-align: left;
 }
 /** END wrapper **/
@@ -110,7 +132,7 @@ img {
 		#header h1 a {
 			display: block;
 			width: 980px; height: 144px;
-			background: url(images/banner-bitdefe.jpg) no-repeat 0 8px;
+			background: url(images/banner-bitdefe.jpg) no-repeat 0px 9px;
 		}
 	#header form {
 		float: right;
@@ -153,6 +175,16 @@ img {
 		font-size: 1em;
 		padding-bottom: 0;
 	}
+
+	#lsidebar a.themelink {
+    		text-transform: uppercase;
+		color: #31322D;
+		font-size: 1em;
+		margin-bottom: 10px;
+		font-weight: bold;
+		text-decoration: none;
+	}
+
 	#lsidebar ul {
 		list-style-type: none;
 		padding-bottom: 25px;
@@ -283,6 +315,19 @@ img {
 		padding: 5px 0;
 		margin-bottom: 10px;
 	}
+	#rsidebar a {
+
+	}
+	#rsidebar a.lienslink {
+		font-size: 0.9em;
+		text-transform: uppercase;
+		color: #302B1C;
+		border-top: 5px solid #302B1C;
+		border-bottom: 1px solid #302B1C;
+		padding: 5px 0;
+		margin-bottom: 20px;
+		text-decoration: none;
+	}
 	#rsidebar .ads {
 		padding: 0 10px 20px;
 		text-align: center;
@@ -335,15 +380,16 @@ img {
 /** BEGIN footer **/
 #footer {
 	clear: both;
-	background: #D9D9D6 url(images/footer.gif) repeat-x 0 0;
-	height: 82px;
-	font-size: 0.9em;
+	background: #D9D9D6 url(images/footer.png) repeat-x 0 0;
+	font-size: 0.9em;	
 	color: #9A9898;
+	height: 62px;
+        width: 100%; !important;
 }
 	#footer .wrapper {
-		margin: auto auto;
-		width: 940px;
-		padding: 35px 0;
+		margin: 0 auto;
+		width: 1400px; !important;
+		padding: 0px 0;
 	}
 	#footer .l {
 		float: left;

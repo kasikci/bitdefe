@@ -4,13 +4,13 @@ Plugin Name: Dropdown Menu Widget
 Plugin URI: http://shailan.com/wordpress/plugins/dropdown-menu
 Description: A multi widget to generate drop-down menus from your pages, categories & navigation menus. You can find more widgets, plugins and themes at <a href="http://shailan.com">shailan.com</a>.
 Tags: dropdown, menu, css, css-dropdown, navigation, widget, dropdown-menu, customization, theme, jquery, template, multi-color, theme
-Version: 1.9.1
+Version: 1.9.2
 Author: Matt Say
 Author URI: http://shailan.com
 Text Domain: shailan-dropdown-menu
 */
 
-define('VERSION', '1.9');
+define('VERSION', '1.9.2');
 
 class shailan_DropdownWidget extends WP_Widget {
 
@@ -34,14 +34,14 @@ class shailan_DropdownWidget extends WP_Widget {
 		
 		// Hook up styles
 		add_action( 'wp_head', array(&$this, 'header') );
-		add_action( 'wp_footer', array(&$this, 'footer'), 10, 1 );			
+		// add_action( 'wp_footer', array(&$this, 'footer'), 10, 1 );			
 		
 		// Hook up scripts 
-		if(!is_admin()){ 
+		/*if(!is_admin()){ */
 			wp_enqueue_script( 'jquery' ); 
 			wp_enqueue_script( 'hoverIntent', plugins_url( '/scripts/hoverIntent.js' , __FILE__ ) , array('jquery') );
 			wp_enqueue_script( 'dropdown-ie-support', plugins_url( '/scripts/include.js' , __FILE__ ) , array('jquery') ); 
-		}
+		/*}*/
 		
 		// Include options array
 		require_once("shailan-dropdown-menu-options.php");
@@ -77,7 +77,6 @@ function admin_header(){
 		// Options page scripts
 		wp_enqueue_script( "jquery" );
 		wp_enqueue_script( 'farbtastic' ); 
-		wp_enqueue_script( "tweetable", plugins_url( '/scripts/jquery.tweetable.js' , __FILE__ ) , 'jquery' );
 		wp_enqueue_script( 'dropdown-colorpick', plugins_url( '/scripts/admin.js' , __FILE__ ) , array('jquery') );
 		
 		if ( @$_REQUEST['action'] && 'save' == $_REQUEST['action'] ) {
@@ -166,67 +165,9 @@ function install_default_settings(){
 	
 	// Set default values
 	foreach($this->options as $option){
-		if( array_key_exists( 'id', $option ) )
+		if( array_key_exists( 'id', $option ) && array_key_exists( 'std', $option ) )
 			$settings[ $option['id'] ] = $option['std'];
 	}
-	
-	// Get old options values and update current settings
-	$settings['shailan_dm_active_theme'] = get_option('shailan_dm_active_theme');
-	delete_option('shailan_dm_active_theme');
-	
-	$settings['shailan_dm_align'] = get_option('shailan_dm_align');
-	delete_option('shailan_dm_align');
-	
-	$settings['shailan_dm_color_hoverlink'] = get_option('shailan_dm_color_hoverlink');
-	delete_option('shailan_dm_color_hoverlink');	
-	
-	$settings['shailan_dm_color_lihover'] = get_option('shailan_dm_color_lihover');
-	delete_option('shailan_dm_color_lihover');	
-	
-	$settings['shailan_dm_color_link'] = get_option('shailan_dm_color_link');
-	delete_option('shailan_dm_color_link');
-	
-	$settings['shailan_dm_color_menubg'] = get_option('shailan_dm_color_menubg');
-	delete_option('shailan_dm_color_menubg');	
-	
-	$settings['shailan_dm_custom_css'] = get_option('shailan_dm_custom_css');
-	delete_option('shailan_dm_custom_css');	
-	
-	$settings['shailan_dm_effect'] = get_option('shailan_dm_effect');
-	delete_option('shailan_dm_effect');	
-	
-	$settings['shailan_dm_effects'] = get_option('shailan_dm_effects');
-	delete_option('shailan_dm_effects');
-	
-	$settings['shailan_dm_effect_delay'] = get_option('shailan_dm_effect_delay');
-	delete_option('shailan_dm_effect_delay');
-		
-	$settings['shailan_dm_effect_speed'] = get_option('shailan_dm_effect_speed');
-	delete_option('shailan_dm_effect_speed');
-	
-	$settings['shailan_dm_exclude'] = get_option('shailan_dm_exclude');
-	delete_option('shailan_dm_exclude');
-		
-	$settings['shailan_dm_font'] = get_option('shailan_dm_font');
-	delete_option('shailan_dm_font');
-			
-	$settings['shailan_dm_fontsize'] = get_option('shailan_dm_fontsize');
-	delete_option('shailan_dm_fontsize');
-				
-	$settings['shailan_dm_home_tag'] = get_option('shailan_dm_home_tag');
-	delete_option('shailan_dm_home_tag');
-					
-	$settings['shailan_dm_overlay'] = get_option('shailan_dm_overlay');
-	delete_option('shailan_dm_overlay');
-						
-	$settings['shailan_dm_show_empty'] = get_option('shailan_dm_show_empty');
-	delete_option('shailan_dm_show_empty');
-							
-	$settings['shailan_dm_theme_url'] = get_option('shailan_dm_theme_url');
-	delete_option('shailan_dm_theme_url');
-								
-	$settings['shailan_dm_type'] = get_option('shailan_dm_type');
-	delete_option('shailan_dm_type');
 	
 	$settings['version'] = $this->version;
 	// Save the settings
@@ -301,6 +242,14 @@ function options_page(){
 		$width_attr = '';
 		if( $width > 0 )
 			$width_attr = 'style="width:' . $width . 'px;"';
+			
+		if( !isset($align) || $align == '') {
+			$align = 'left';
+		}
+		
+		if( !isset($type) || $type == '') {
+			$type = 'pages';
+		}
 		
         echo $args['before_widget']; 
 		
@@ -428,18 +377,14 @@ function options_page(){
 					  'menu_class'      => 'dropdown '. $orientation . ' dropdown-align-'.$align, 
 					  'menu_id'         => '',
 					  'echo'            => true,
-					  'fallback_cb'     => 'wp_page_menu',
-					  'before'          => '',
-					  'after'           => '',
-					  'link_before'     => '',
-					  'link_after'      => '',
-					  'depth'           => 0,
-					  'walker'          => '',
-					  'theme_location'  => $location );
+					  'theme_location'  => $location,
+					  'is_shailan_dropdown_callback' => 'yes'
+					  );
 					  
-				if($custom_walkers){
-					$page_walker = new shailan_PageWalker();
-					$menu_args = wp_parse_args( array('walker'=>$page_walker) , $menu_args ); }
+					if($custom_walkers){
+						$page_walker = new shailan_PageWalker();
+						$menu_args = wp_parse_args( array('walker'=>$page_walker) , $menu_args ); 
+					}
 					
 					echo $dropdown_wrapper_open;
 					do_action('dropdown_before');
@@ -454,7 +399,7 @@ function options_page(){
 			echo $nl . "</div>";
 			echo "\n\n<!--/ Dropdown Menu Widget -->";		?>
 			
-              <?php echo $after_widget; ?>
+              <?php echo $after_widget; $this->footer(); ?>
         <?php
     }
 	
@@ -557,13 +502,15 @@ function options_page(){
 ******************************************************************************/
 	function header($instance){
 	
-		if(!is_admin()){
+		/*if(!is_admin()){*/
 		
 			//$default_headers = array( 'Version' => 'Version' );
 			//$dropdown = get_file_data( __FILE__, $default_headers, 'plugin' );
 		
 			$theme = $this->get_plugin_setting('shailan_dm_active_theme');
 			if($theme == '*url*'){ $theme = $this->get_plugin_setting('shailan_dm_theme_url'); }
+			if($theme == ''){ $theme = "web20"; }
+			
 			$allow_multiline = (bool) ( 'on' == $this->get_plugin_setting('shailan_dm_allowmultiline') );
 			// Colors
 			$custom_colors = (bool) ( 'on' == $this->get_plugin_setting('shailan_dm_custom_colors') );
@@ -600,10 +547,10 @@ function options_page(){
 			if(!empty($font_size)){ echo $indent. "ul.dropdown li a { font-size:$font_size; }"; }
 			
 			if(!$allow_multiline){
-				echo $indent. "ul.dropdown { white-space: nowrap;	}";
+				echo $indent. "ul.dropdown { white-space: nowrap; }";
 			}
-				
-			if($custom_colors){
+			
+			if( $custom_colors ){
 			// Custom color scheme is active
 			
 			// Overlay support 
@@ -679,6 +626,7 @@ if( 'on' == $this->get_plugin_setting('shailan_dm_arrows') ){
 	$clr = $this->get_plugin_setting('shailan_dm_arrow_color');
 
 ?>
+
 ul.dropdown li.parent>a{
 	padding-right:25px;
 }
@@ -704,13 +652,13 @@ ul.dropdown li li.parent:hover>a:after{
 			echo "\n<!-- /Dropdown Menu Widget Styles -->";
 			echo "\n\n ";
 		
-		}
+		/*}*/
 	} // -- End Header
 	
 /******************************************************************************
 *  HEADER
 ******************************************************************************/
-	function footer($instance){
+	function footer( $instance = null ){
 		$indent = "\n\t";
 		
 		$remove_title_attributes = (bool) ( 'on' == $this->get_plugin_setting('shailan_dm_remove_title_attributes') );
@@ -776,7 +724,7 @@ ul.dropdown li li.parent:hover>a:after{
 		
 		echo "\n});";
 		echo "\n/* ]]> */</script>";
-		echo "\n<!-- /Dropdown Menu Widget Styles -->";
+		echo "\n<!-- /Dropdown Menu Widget Effects -->";
 		echo "\n\n ";
 
 		} // fx active
@@ -816,6 +764,33 @@ include('shailan-category-walker.php'); // Load custom category walker
 /* Custom widget */	
 include('shailan-multi-dropdown.php'); // Load multi-dropdown widget
 
+// Settings link
+function shailan_dropdown_add_settings_link($links) {
+    $settings_link = '<a href="options-general.php?page=dropdown-menu">Settings</a>';
+    array_push( $links, $settings_link );
+    return $links;
+}
+
+$plugin = plugin_basename(__FILE__);
+add_filter( "plugin_action_links_$plugin", 'shailan_dropdown_add_settings_link' );
+
+// After activation redirect
+register_activation_hook(__FILE__, 'shailan_dropdown_activate');
+add_action('admin_init', 'shailan_dropdown_redirect');
+
+function shailan_dropdown_activate() {
+    add_option('shailan_dropdown_do_activation_redirect', true);
+}
+
+// Redirects to options page on activate
+function shailan_dropdown_redirect() {
+    if ( get_option( 'shailan_dropdown_do_activation_redirect', false ) ) {
+        delete_option('shailan_dropdown_do_activation_redirect');
+		$url = admin_url( 'options-general.php?page=dropdown-menu' );
+        wp_redirect($url);
+    }
+}
+
 // Template tag support
 function shailan_dropdown_menu( $args = array() ){
 
@@ -848,3 +823,28 @@ function shailan_dropdown_menu( $args = array() ){
 	the_widget( 'shailan_DropdownWidget', $options );
 	
 }
+
+/**
+* Replaces nav menu callback function to use dropdown menu.
+*
+* @since 1.9.2
+*/
+function shailan_nav_menu_args_filter( $args ){
+
+	$replace_enabled = get_dropdown_setting( 'shailan_dm_location_enabled' );
+	
+	if( 'on' == $replace_enabled ){
+		$theme_location = get_dropdown_setting( 'shailan_dm_location' );
+		if( $args['theme_location'] == $theme_location ){
+			$args['fallback_cb'] = 'shailan_dropdown_menu';
+		}
+	}
+	
+	return $args;
+} add_filter('wp_nav_menu_args', 'shailan_nav_menu_args_filter', 90, 1);
+
+/*
+function shailan_nav_menu_output_filter( $nav_menu, $args ){
+	return $nav_menu;
+} add_filter( 'wp_nav_menu', 'shailan_nav_menu_output_filter', 10, 2);
+*/
